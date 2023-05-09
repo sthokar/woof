@@ -1,4 +1,4 @@
-import { Form } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -18,6 +18,47 @@ import backgroundImage from "../../assets/images/dog-at-beach.jpg";
 const theme = createTheme();
 
 export default function Auth() {
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      name: data.get('name'),
+    });
+    const authData = {
+      email: data.get('email'),
+      name: data.get('name'),
+    };
+  
+    const response = await fetch('https://frontend-take-home-service.fetch.com/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include', // Include cookies in request
+      body: JSON.stringify(authData)
+    })
+    .then(response => {
+      if (response.ok) {
+        // Login successful, set state to indicate that we're logged in
+        setIsAuthenticated(true);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        throw new Error('Login failed')
+      }
+    })
+    .catch(error => {
+      console.error(error)
+    })
+  }
+  
+  
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>
@@ -55,8 +96,13 @@ export default function Auth() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Form method="post">
-              <TextField
+            {isAuthenticated && (
+              <Typography component="p" variant="body1" color="green">
+                Authentication successful! Redirecting...
+              </Typography>
+            )}
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -85,7 +131,7 @@ export default function Auth() {
               >
                 Sign In
               </Button>
-            </Form>
+            </Box>
           </Box>
         </Grid>
       </Grid>

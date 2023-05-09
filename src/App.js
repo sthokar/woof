@@ -12,7 +12,7 @@ import HomePage from './pages/Home'
 // import NewEventPage from './pages/NewEvent';
 import RootLayout from "./pages/Root";
 import { Suspense } from "react";
-
+import Auth from "./components/Auth/AuthForm";
 // import { action as manipulateEventAction } from './components/EventForm';
 // import NewsletterPage, { action as newsletterAction } from './pages/Newsletter';
 import AuthenticationPage, {
@@ -34,11 +34,10 @@ const router = createBrowserRouter([
         element: <Suspense fallback={<div>Loading...</div>}>
         <HomePage />
       </Suspense>,
-        loader: checkAuthLoader,
             },
       {
         path: "login",
-        element: <AuthenticationPage />,
+        element: <Auth/>,
         action: authAction      },
     ],
   },

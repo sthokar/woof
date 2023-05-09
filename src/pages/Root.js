@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Outlet, useLoaderData, useSubmit } from 'react-router-dom';
+import { Outlet, useLoaderData, useSubmit, useLocation } from 'react-router-dom';
 
 import MainNavigation from '../components/MainNavigation';
 import { getAuthCookieDuration } from '../util/auth';
@@ -8,13 +8,18 @@ function RootLayout() {
   const authCookie = useLoaderData();
   const submit = useSubmit();
   // const navigation = useNavigation();
+  const location = useLocation();
+
+  const showMainNavigation = location.pathname !== '/login';
+
+
   useEffect(() => {
     if (!authCookie) {
       return;
     }
 
     if (authCookie === 'EXPIRED') {
-      submit(null, { action: '/logout', method: 'post' });
+      submit(null, { action: '/login', method: 'post' });
       return;
     }
 
@@ -22,14 +27,14 @@ function RootLayout() {
     console.log(authCookieDuration);
 
     setTimeout(() => {
-      submit(null, { action: '/logout', method: 'post' });
+      submit(null, { action: '/login', method: 'post' });
     }, authCookieDuration);
   }, [authCookie, submit]);
 
   return (
     <>
-      <MainNavigation />
-      <main>
+    {showMainNavigation && <MainNavigation />}
+    <main>
         {/* {navigation.state === 'loading' && <p>Loading...</p>} */}
         <Outlet />
       </main>
