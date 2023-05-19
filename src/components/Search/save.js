@@ -8,7 +8,7 @@ import {
   fetchLocations,
   handleSearch
 } from "../../store/searchSlice";
-import DogList from "./dogs";
+import DogList from "../Dogs/DogsList";
 import { ShowChart } from "@mui/icons-material";
 import LocationMap from "./map";
 import SearchForm from "../../pages/City";

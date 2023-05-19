@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchBreeds } from '../store/breedSlice';
 import Search from '../components/Search/Search';
 import LocationMap from '../components/Search/map';
+import DogList from '../components/Dogs/DogsList';
 
 function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,9 +31,8 @@ function Home() {
 
   return (
     <div>
-      <h1>Dog Breeds</h1>
       <Search/>
-    
+      <DogList/>
     </div>
   );
 }

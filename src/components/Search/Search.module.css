@@ -1,0 +1,33 @@
+.searchContainer{
+    background-color: rgb(224, 216, 224);
+    padding:20px;
+    display:flex;
+    justify-content: space-between;
+}
+
+.searchFilter{
+    width:60%;
+    
+}
+.filterButton{
+    margin-right:20px;
+}
+.searchFilterContainer{
+    display: flex; 
+}
+.filterButtonContainer{
+    margin:10px 0px;
+}
+.search{
+    margin:20px
+}
+.errorMessage{
+    color:red
+}
+.errorMessage + .searchBreed input {
+    border: 2px solid red;
+  }
+  .map{
+
+  }
+  

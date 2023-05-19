@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet, useLoaderData, useSubmit, useLocation } from 'react-router-dom';
 
-import MainNavigation from '../components/MainNavigation';
+import MainNavigation from '../components/Layout/MainNavigation';
 import { getAuthCookieDuration } from '../util/auth';
 
 function RootLayout() {
@@ -10,7 +10,7 @@ function RootLayout() {
   // const navigation = useNavigation();
   const location = useLocation();
 
-  const showMainNavigation = location.pathname !== '/login';
+  const showMainNavigation = location.pathname !== '/';
 
 
   useEffect(() => {

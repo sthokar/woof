@@ -1,94 +1,44 @@
-import { useMemo, useState, useCallback, useEffect } from "react";
-import { AsyncPaginate } from "react-select-async-paginate";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   searchDogs,
-  handleNextClick,
-  handlePrevClick,
   fetchLocations,
-  handleSearch
 } from "../../store/searchSlice";
-import DogList from "./dogs";
-import { ShowChart } from "@mui/icons-material";
+import DogList from "../Dogs/DogsList";
 import LocationMap from "./map";
-import SearchForm from "../../pages/City";
-import states from "./states.json"
-const searchStates = async (search, loadedOptions) => {
-  const filteredOptions = states.filter((state) => {
-    return state.name.toLowerCase().startsWith(search.toLowerCase()) || state.abbreviation.toLowerCase().startsWith(search.toLowerCase());
-  });
+import CitySearch from "./CitySearch";
+import BreedSearch from "./BreedSearch";
+import StateSearch from "./StateSearch";
+import SearchResults from "./SearchResults";
+import { Button, Drawer, Modal, Box ,IconButton} from "@mui/material";
+import { ExpandMore, ExpandLess } from "@mui/icons-material";
 
-  const options = filteredOptions.map((state) => {
-    return { label: state.name, value: state.abbreviation };
-  });
+import classes from './Search.module.css'
 
-  return {
-    options,
-    hasMore: false,
-  };
-};
+
+
 
 const Search = ({ onSearchChange }) => {
-  const API_BASE_URL = "https://frontend-take-home-service.fetch.com";
-
   const [search, setSearch] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dogs, setDogs] = useState([]);
-  const breeds = useSelector((state) => state.breeds.breeds);
-  const showNext = useSelector((state) => state.search.showNext);
-  const showPrev = useSelector((state) => state.search.showPrev);
   const [isLoading, setIsLoading] = useState(false);
   const doggies = useSelector((state) => state.search.dogDetails);
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortOrder, setSortOrder] = useState("asc");
   const [selectedOption, setSelectedOption] = useState(null);
-
-
   const [selectedState, setSelectedState] = useState("");
+  const [results, setResults] = useState([]);
+  const [isResultsAvailable, setIsResultsAvailable] = useState(false);
+  const [isLocationEmptyError, setIsLocationEmptyError] = useState(false);
+  const [isBreedValid, setIsBreedValid] = useState(true); // Track breed input validity
 
-  
-
-const handleStateChange = (selectedOption) => {
-  setSelectedState(selectedOption.value);
-  dispatch(fetchLocations({ 'states': [selectedOption.value] }));
-
-};
-
-  const location = doggies.map((data) => data.zip_code);
-
+  const [isFilterByLocationOpen, setIsFilterByLocationOpen] = useState(false);
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (location.length > 0) {
-      dispatch(fetchLocations(location));
-    }
-  }, [dispatch, location]);
 
-  const loadOptions = useCallback(
-    async (inputValue, loadedOptions, { page }) => {
-      const filteredBreeds = breeds.filter((breed) =>
-        breed.toLowerCase().startsWith(inputValue.toLowerCase())
-      );
+  const handleStateChange = useCallback((selectedOption) => {
+    setSelectedState(selectedOption);
+    dispatch(fetchLocations({ states: [selectedOption] }));
+  }, [dispatch]);
 
-      const start = (page - 1) * 25;
-      const end = page * 25;
-
-      const options = filteredBreeds
-        .slice(start, end)
-        .map((breed) => ({ label: breed, value: breed }));
-
-      return {
-        options,
-        hasMore: filteredBreeds.length > end,
-        additional: {
-          page: page + 1,
-        },
-      };
-    },
-    [breeds]
-  );
-
-  const handleSearchButton = (city) => {
-    dispatch(handleSearch(city));
-  };
   const handleSortOrderChange = (event) => {
     setSortOrder(event.target.value);
   };
@@ -99,142 +49,139 @@ const handleStateChange = (selectedOption) => {
 
   const handleOnSubmit = (event) => {
     event.preventDefault();
-
     if (search) {
-      dispatch(searchDogs(search.value,sortOrder,selectedOption));
+      const breeds = dispatch(searchDogs(search.value, sortOrder, selectedOption));
+      if(breeds) {
+        setIsResultsAvailable(true); 
+      }
+      setIsBreedValid(true); // Reset breed validity state
+    } else {
+      setIsBreedValid(false); // Set breed validity state to false if it is empty
     }
+   // Check for location search error
+  const isLocationEmpty = isFilterByLocationOpen && (!selectedState || !selectedOption);
+  setIsLocationEmptyError(isLocationEmpty);
+    
   };
 
-  const handleNext = async () => {
-    if (showNext) {
-      setIsLoading(true);
-
-      dispatch(handleNextClick(sortOrder));
-      setCurrentPage(currentPage + 1);
-
-      setIsLoading(false);
+  useEffect(() => {
+    const location = doggies.map((data) => data.zip_code);
+    if (location.length > 0) {
+      dispatch(fetchLocations(location)).then((response) => {
+        const responseData = Array.isArray(response) ? response : [];
+        setResults(responseData);
+      });
     }
-  };
-
-  const handlePrev = async () => {
-    if (showPrev) {
-      setIsLoading(true);
-
-      dispatch(handlePrevClick(sortOrder));
-      setCurrentPage(currentPage - 1);
-
-      setIsLoading(false);
-    }
-  };
-
-  const [results, setResults] = useState([]);
-
-
-  const loadOptionsCity = async (search, loadedOptions, page) => {
-    if (!selectedState) {
-      return {
-        options: [],
-        hasMore: false,
-      };
-    }
-    if (!search) {
-      return {
-        options: [],
-        hasMore: false,
-      };
-    }
-    try {
-      const response = await dispatch(handleSearch(search));
-      const options = response.payload.results
-        .filter((location) => location.state === selectedState)
-        .map((location) => ({
-          value: location.zip_code,
-          label: location.city,
-        }));
-  
-      return {
-        options,
-        hasMore: response.hasMore,
-        additional: {
-          page: page + 1,
-        },
-      };
-    } catch (error) {
-      console.error(error);
-      return {
-        options: [],
-        hasMore: false,
-      };
-    }
-  };
-  
-  
-  const handleChange = (newValue) => {
-    loadOptions(newValue, null, 1);
-    setSelectedOption(newValue);
-
-  };
-  
+  }, [dispatch, doggies]);
 
   const handleSelect = (option) => {
     setSelectedOption(option);
-    // Pass selected option to parent component
   };
 
+  const handleFilterByLocationClick = () => {
+    setIsFilterByLocationOpen(!isFilterByLocationOpen);
+  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
-    <div>
+    <div className = {classes.searchContainer}>
+      <div>
+     
 
-      <AsyncPaginate
-        placeholder="Search for breed"
-        debounceTimeout={10}
-        value={search}
-        onChange={handleOnChange}
-        loadOptions={(inputValue, loadedOptions) =>
-          loadOptions(inputValue, loadedOptions, { page: currentPage })
-        }
-        additional={{
-          page: 1,
-        }}
-        isPaginated
-        hasMore
+      <BreedSearch
+        currentPage={currentPage}
+        handleOnChange={handleOnChange}
+        handleOnSubmit={handleOnSubmit}
+        isBreedValid={isBreedValid}
       />
-      <AsyncPaginate
-      cacheUniqs={[selectedState]}
-      loadOptions={searchStates}
-      value={{ label: selectedState, value: selectedState }}
-      placeholder="Enter a state or abbreviation..."
-      onChange={handleStateChange}
-    />
-    {selectedState &&
-      <AsyncPaginate
-      debounceTimeout={200}
-      value={selectedOption}
-      loadOptions={loadOptionsCity}
-      onChange={handleSelect}
-      placeholder="Search by City or State"
-      keepSelectedInList={true}
-    />}
-    <label htmlFor="sort-order">Sort Order:</label>
-    <select id="sort-order" value={sortOrder} onChange={handleSortOrderChange}>
-      <option value="asc">Ascending</option>
-      <option value="desc">Descending</option>
-    </select>
+      {isBreedValid ? null : (
+        <p className={classes.errorMessage}>*Please enter a breed</p>
+      )}
+      <div className={classes.filterButtonContainer}> 
+      <IconButton
+        onClick={handleFilterByLocationClick}
+        className={classes.filterButton}
+        sx={{
+          borderRadius: "4px",
+          width: "200px",
+          fontSize:"16px",
+           height:"40px",
+           marginRight: "20px",
+          alignItems: "center",
+          backgroundColor: "#f2f2f2",
+        }}
+      >
+        <p>Add Location</p>
+        {isFilterByLocationOpen ? <ExpandLess /> : <ExpandMore />}
 
-      {showPrev && <button onClick={handlePrev}>Previous</button>}
+      </IconButton>
+      <label htmlFor="sort-order">Sort Order:</label>
+      <select
+        id="sort-order"
+        value={sortOrder}
+        onChange={handleSortOrderChange}
+      >
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
 
-      {showNext && <button onClick={handleNext}>Next</button>}
+      </div>
       
-      <button onClick={handleOnSubmit}>Submit</button>
-      <DogList isLoading={isLoading} />
-      {results.map((result) => (
-        <div key={result.zip_code}>
-          <p>{result.city}, {result.state}</p>
-          <p>Latitude: {result.latitude}</p>
-          <p>Longitude: {result.longitude}</p>
+
+      
+      {isFilterByLocationOpen && (
+        <>
+        <div className={classes.searchFilterContainer}>
+          <StateSearch isLocationEmptyError={isLocationEmptyError} onStateChange={handleStateChange} />
+
+          {selectedState && (
+            <CitySearch isLocationEmptyError={isLocationEmptyError} selectedState={selectedState} onChange={handleSelect} />
+          )}
+         
         </div>
-      ))}
-      <LocationMap/>
+        {isLocationEmptyError && (
+          <p className={classes.errorMessage}>*Please enter State and City</p>
+        )}
+        </>
+      )}
+      
+      
+      
+
+      
+
+    </div>
+    {isResultsAvailable && 
+      <Box
+      className={classes.map}
+      sx={{
+        width: "200px",
+        height: "200px",
+        alignItems: "center",
+        display: "flex",
+        justifyContent: "center",
+        borderRadius: "8px",
+        overflow: "hidden",
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+        cursor: "pointer",
+      }}
+      onClick={handleOpenModal}
+    >        <LocationMap />
+      </Box>
+    }
+
+      <Modal open={isModalOpen} onClose={handleCloseModal}>
+        <LocationMap />
+      </Modal>
     </div>
   );
 };
+
 export default Search;

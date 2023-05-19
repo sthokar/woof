@@ -1,50 +1,66 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { useSelector,ReactReduxContext } from 'react-redux';
 
-// import EditEventPage from './pages/EditEvent';
-// import ErrorPage from './pages/Error';
-// import EventDetailPage, {
-//   loader as eventDetailLoader,
-//   action as deleteEventAction,
-// } from './pages/EventDetail';
-// import EventsPage, { loader as eventsLoader } from './pages/Events';
-// import EventsRootLayout from './pages/EventsRoot';
-import HomePage from './pages/Home'
-// import NewEventPage from './pages/NewEvent';
-import RootLayout from "./pages/Root";
-import { Suspense } from "react";
-import Auth from "./components/Auth/AuthForm";
-// import { action as manipulateEventAction } from './components/EventForm';
-// import NewsletterPage, { action as newsletterAction } from './pages/Newsletter';
-import AuthenticationPage, {
-  action as authAction,
-} from "./pages/Authentication";
-// import { action as logoutAction } from './pages/Logout';
-import { checkAuthLoader, authCookieLoader } from "./util/auth";
-import ErrorPage from "./pages/Error";
+import HomePage from './pages/Home';
+import RootLayout from './pages/Root';
+import { Suspense } from 'react';
+import Auth from './components/Auth/AuthForm';
+import ErrorPage from './pages/Error';
+import Favorites from './components/Favorites';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <RootLayout />,
     errorElement: <ErrorPage />,
-    id: "root",
+    id: 'root',
     children: [
       {
         index: true,
-        element: <Suspense fallback={<div>Loading...</div>}>
-        <HomePage />
-      </Suspense>,
-            },
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <Auth />
+          </Suspense>
+        ),
+      },
       {
-        path: "login",
-        element: <Auth/>,
-        action: authAction      },
+        path: 'home',
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <HomePage />
+          </Suspense>
+        ),
+      },
+    ],
+  },
+  {
+    path: '/favorites',
+    element: <RootLayout />,
+    children: [
+      {
+        index: true,
+        element: <Favorites />,
+      },
     ],
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  console.log(isAuthenticated)
+  
+
+  return (
+    <ReactReduxContext.Consumer>
+      {({ store }) => (
+        <RouterProvider router={router} store={store}>
+          <Suspense fallback={<div>Loading...</div>}>
+            {isAuthenticated ? <HomePage /> : <Auth />}
+          </Suspense>
+        </RouterProvider>
+      )}
+    </ReactReduxContext.Consumer>
+  );
 }
 
 export default App;

@@ -8,11 +8,13 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useDispatch } from 'react-redux';
+import classes from './DogsList.module.css'
 
 
 
-import LocationMap from './map';
+import LocationMap from '../Search/map';
 import { addFavoriteDog , removeFavoriteDog} from '../../store/favoriteSlice';
+import { ClassNames } from '@emotion/react';
 
 function DogCard(props) {
   const { img, name, age, breed, zip_code, id } = props;
@@ -34,16 +36,21 @@ function DogCard(props) {
 
 
   return (
-    <Card style={{ maxWidth: 345 }}>
+    <Card className={classes.dogCard} style={{ maxWidth: 345 }}>
       <CardActionArea>
         <CardMedia
           component="img"
-          height="140"
+          className={classes.cardMediaDog} 
           image={img}
           title={name}
         />
+        <IconButton onClick={handleClick}>
+        <FavoriteIcon color={favorited ? 'error' : 'disabled'} /><Typography variant="body2" color="textSecondary" component="p">
+        Pick Me
+      </Typography>
+      </IconButton>
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography className={classes.dogName} gutterBottom variant="h5" component="h2">
             {name}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
@@ -55,9 +62,7 @@ function DogCard(props) {
           <Typography variant="body2" color="textSecondary" component="p">
             Zip Code: {zip_code}
           </Typography>
-          <IconButton onClick={handleClick}>
-          <FavoriteIcon color={favorited ? 'error' : 'disabled'} />
-        </IconButton>
+         
         </CardContent>
       </CardActionArea>
     </Card>
@@ -76,7 +81,7 @@ function DogList({ isLoading }) {
     }
   
     return (
-      <div>
+      <div className={classes.dogListContainer}>
         {dogs.map((dog) => (
           <DogCard
             key={dog.id}
@@ -86,6 +91,7 @@ function DogList({ isLoading }) {
             age={dog.age}
             breed={dog.breed}
             zip_code={dog.zip_code}
+            className={classes.dog}
           />
         ))}
       </div>

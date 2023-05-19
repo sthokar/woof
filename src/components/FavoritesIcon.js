@@ -5,7 +5,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import classes from './MainNavigation.module.css';
 
 function FavoritesIcon() {
-  const favoriteDogs = useSelector((state) => state.favoriteDogs);
+  const favoriteDogs = useSelector((state) => state.favoriteDogs.dogs);
 
   return (
     <div className={classes.favoritesIcon}>

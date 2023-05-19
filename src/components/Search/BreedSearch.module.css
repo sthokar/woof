@@ -1,0 +1,24 @@
+.searchBar{
+   width:100%; /* Adjust the height according to your preference */
+   margin-right:20px;
+ }
+  /* BreedSearch.module.css */
+.searchContainer {
+    display: flex;
+    align-items: center;
+  }
+  
+  .buttonContainer {
+    display: flex;
+  }
+  
+  .searchButton {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  .error{
+    border: 1px solid red;
+  }
+  
