@@ -1,12 +1,17 @@
 .searchContainer{
-    background-color: rgb(224, 216, 224);
+    background-color: rgb(209, 204, 209);
     padding:20px;
     display:flex;
-    justify-content: space-between;
+    
+
+
+}
+.breedSearch{
+    flex-grow: 1;
 }
 
 .searchFilter{
-    width:60%;
+    width:100%;
     
 }
 .filterButton{

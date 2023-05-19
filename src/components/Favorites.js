@@ -10,11 +10,7 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
+  Box,
   Button,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -61,7 +57,9 @@ const Favorites = () => {
   };
 
   return (
-    <>
+    <Box
+    margin="20px"
+    >
       <List>
         {favoriteDogs.map((dog) => (
           <ListItem key={dog.id}>
@@ -81,7 +79,7 @@ const Favorites = () => {
         ))}
       </List>
 
-      <Button variant="contained" color="primary" onClick={handleMatch}>
+      <Button variant="contained" color="primary" onClick={handleMatch} align="center">
         Match
       </Button>
 
@@ -98,7 +96,7 @@ const Favorites = () => {
           matchedDogId={matchedDogId}
         />
       )}
-    </>
+    </Box>
   );
 };
 

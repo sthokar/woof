@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Typography from '@mui/material/Typography';
+
 import {
   searchDogs,
   fetchLocations,
@@ -92,10 +94,11 @@ const Search = ({ onSearchChange }) => {
   };
   return (
     <div className = {classes.searchContainer}>
-      <div>
+      <div className = {classes.breedSearch}>
      
 
       <BreedSearch
+      
         currentPage={currentPage}
         handleOnChange={handleOnChange}
         handleOnSubmit={handleOnSubmit}
@@ -177,9 +180,32 @@ const Search = ({ onSearchChange }) => {
       </Box>
     }
 
-      <Modal open={isModalOpen} onClose={handleCloseModal}>
-        <LocationMap />
-      </Modal>
+    <Modal open={isModalOpen} onClose={handleCloseModal}>
+    <Box
+      sx={{
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '700px',
+        height: '700px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
+        borderRadius: '8px',
+      }}
+    >
+      <Typography variant="h6" component="h6" sx={{ marginBottom: '10px' }}>
+        Map
+      </Typography>
+    
+      <LocationMap />
+    </Box>
+  </Modal>
+  
     </div>
   );
 };

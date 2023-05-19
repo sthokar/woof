@@ -16,7 +16,7 @@ function LocationMap() {
     markers = mapDetails
       .map((data) => {
         if (data && data.latitude && data.longitude) {
-          return { geocode: [data.latitude, data.longitude], popUp: "Pop Up" };
+          return { geocode: [data.latitude, data.longitude], popUp: "Woof" };
         }
         return null;
       })

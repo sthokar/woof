@@ -26,6 +26,7 @@ function MainNavigation() {
     dispatch(logout())
       .then(() => {
         setTimeout(() => {
+          dispatch(setShowLogoutModal(false));
           navigate("/");
         }, 1500);       
       })
@@ -39,7 +40,7 @@ function MainNavigation() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: 'purple' }}>
+    <AppBar position="static" sx={{ backgroundColor: 'rgb(91,21,174)' }}>
       <Toolbar>
         <img src={logoImg} alt="Logo" style={{ marginRight: '10px', height: '30px' }} />
 

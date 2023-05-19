@@ -51,6 +51,7 @@ export default function Auth() {
     if (isAuthenticated) {
       setTimeout(() => {
         navigate("/home");
+        setShowRedirectModal(true)
       }, 1500);
     }
   }, [isAuthenticated,navigate]);
@@ -86,6 +87,39 @@ export default function Auth() {
             objectFit: "cover",
           }}
         />
+        <Box
+    sx={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      textAlign: "center",
+      zIndex: 1,
+    }}
+  >
+    <Typography
+      variant="h2"
+      component="h2"
+      sx={{ color: "white", fontWeight: "bold" }}
+    >
+      Welcome!
+    </Typography>
+    <Typography
+      variant="h5"
+      component="h3"
+      sx={{ color: "white", marginTop: 2 }}
+    >
+      Please sign in to continue.
+    </Typography>
+  </Box>
+
+
+
+
+
+
+
+
       
       </Grid>
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
