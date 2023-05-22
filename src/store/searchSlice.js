@@ -4,7 +4,7 @@ const searchSlice = createSlice({
   name: "search",
   initialState: {
     breeds: [],
-    dogs: [],
+    dogs: {},
     nextEndpoint: false,
     prevEndpoint: false,
     showNext: "",

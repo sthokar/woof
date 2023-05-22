@@ -1,28 +1,47 @@
-.dogListContainer{
+.dogListContainer {
     display: flex;
     flex-direction: row;
     justify-content: center;
     flex-wrap: wrap;
     width: 100%;
-background-color: rgb(239,238,241);}
+  }
+  .homeContainer{
+    background-color: rgb(239, 238, 241);
 
-    .dog{
-        flex: 33.33%;
-          width: 100%;
-
-
-    }
-    .dogName{
-        text-align:center;
-        color:purple;
-        font-size:30px;
-    }
-    .dogCard {
-        width: 290px;
-        margin: 10px;
-      }
-    .cardMediaDog{
-        height: 180px;
-  object-fit: fill;
-
-    }
+  }
+  
+  .paginationTopCenter {
+    display: flex;
+    justify-content: center;
+    padding:10px 0;
+  }
+  
+  .dog { 
+    flex: 33.33%;
+    width: 100%;
+  }
+  .prev{
+    margin:5px;
+    padding:5px;
+  }
+  .next{
+    margin:5px;
+    padding:5px;
+  }
+  
+  .dogName {
+    text-align: center;
+    color: purple;
+    font-size: 30px;
+  }
+  
+  .dogCard {
+    width: 290px;
+    margin: 10px;
+  }
+  
+  .cardMediaDog {
+    height: 180px;
+    object-fit: fill;
+  }
+  

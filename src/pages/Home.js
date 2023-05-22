@@ -15,6 +15,14 @@ function Home() {
   
   const dispatch = useDispatch();
   const dogList = useSelector((state) => state.search.dogs);
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
+  useEffect(() => {
+    console.log("heleasfd",dogList)
+    if (isFirstRender && Array.isArray(dogList) || dogList.length > 0) {
+      setIsFirstRender(false);
+    }
+  }, [dogList]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -41,11 +49,11 @@ function Home() {
       </Typography>
     );
   }
-
+console.log("render", isFirstRender)
   return (
     <div>
       <Search />
-      {dogList.length === 0 ? (
+      {isFirstRender ? (
        <Box
           sx={{
             display: 'flex',
@@ -68,9 +76,25 @@ function Home() {
             We have a wide variety of dogs available for adoption. Use the search above to find your perfect match.
           </Typography>
         </Box>
-      ) : (
-        <DogList />
+      ) :  (
+        dogList.length === 0 && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '65vh',
+              textAlign: 'center',
+              marginTop: '50px',
+            }}
+          >
+            <Typography variant="h5" component="div">
+              No results were found in your area. Please select another state or city.
+            </Typography>
+          </Box>
+        )
       )}
+      {dogList.length > 0 && <DogList />}
     </div>
   );
 }

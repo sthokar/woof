@@ -82,6 +82,7 @@ const Search = ({ onSearchChange }) => {
 
   const handleFilterByLocationClick = () => {
     setIsFilterByLocationOpen(!isFilterByLocationOpen);
+    setSelectedOption(null)
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
 

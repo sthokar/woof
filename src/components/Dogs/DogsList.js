@@ -9,17 +9,21 @@ import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useDispatch } from 'react-redux';
 import classes from './DogsList.module.css'
+import { handleNextClick, handlePrevClick } from "../../store/searchSlice";
+
 
 
 
 import LocationMap from '../Search/map';
 import { addFavoriteDog , removeFavoriteDog} from '../../store/favoriteSlice';
-import { ClassNames } from '@emotion/react';
 
 function DogCard(props) {
   const { img, name, age, breed, zip_code, id } = props;
   const [favorited, setFavorited] = useState(false);
   const dispatch = useDispatch();
+ 
+  
+
   const handleClick = () => {
     // Dispatch the data of the selected DogCard to the store
     if(!favorited){
@@ -33,6 +37,7 @@ function DogCard(props) {
     setFavorited(!favorited);
     }
   };
+  
 
 
   return (
@@ -70,6 +75,30 @@ function DogCard(props) {
 }
 
 function DogList({ isLoading }) {
+  const showNext = useSelector((state) => state.search.showNext);
+  const showPrev = useSelector((state) => state.search.showPrev);
+  const dispatch = useDispatch();
+
+
+  const handleNext = async () => {
+    if (showNext) {
+
+      dispatch(handleNextClick());
+      // Update currentPage state here
+      // ...
+
+    }
+  };
+
+  const handlePrev = async () => {
+    if (showPrev) {
+
+      dispatch(handlePrevClick());
+      // Update currentPage state here
+      // ...
+
+    }
+  };
     
     const dogs = useSelector((state) => state.search.dogDetails);
     console.log("dogs",dogs);
@@ -81,6 +110,11 @@ function DogList({ isLoading }) {
     }
   
     return (
+      <div className={classes.homeContainer}>
+      <div className={classes.paginationTopCenter}>
+      {showPrev && <button className={classes.prev} onClick={handlePrev}>Previous</button>}
+      {showNext && <button className={classes.next} onClick={handleNext}>Next</button>}
+      </div>
       <div className={classes.dogListContainer}>
         {dogs.map((dog) => (
           <DogCard
@@ -94,6 +128,7 @@ function DogList({ isLoading }) {
             className={classes.dog}
           />
         ))}
+        </div>
       </div>
     );
   }

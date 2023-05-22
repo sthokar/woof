@@ -8,8 +8,7 @@ import { Search } from "@mui/icons-material";
 const BreedSearch = ({ currentPage, handleOnChange,  handleOnSubmit, isBreedValid }) => {
   const dispatch = useDispatch();
   const breeds = useSelector((state) => state.breeds.breeds);
-  const showNext = useSelector((state) => state.search.showNext);
-  const showPrev = useSelector((state) => state.search.showPrev);
+ 
   const [isLoading, setIsLoading] = useState(false);
 
   const loadOptions = useCallback(
@@ -37,29 +36,7 @@ const BreedSearch = ({ currentPage, handleOnChange,  handleOnSubmit, isBreedVali
   );
 
 
-  const handleNext = async () => {
-    if (showNext) {
-      setIsLoading(true);
-
-      dispatch(handleNextClick());
-      // Update currentPage state here
-      // ...
-
-      setIsLoading(false);
-    }
-  };
-
-  const handlePrev = async () => {
-    if (showPrev) {
-      setIsLoading(true);
-
-      dispatch(handlePrevClick());
-      // Update currentPage state here
-      // ...
-
-      setIsLoading(false);
-    }
-  };
+  
 
   return (
     <div className={classes.searchContainer} >
@@ -78,8 +55,7 @@ const BreedSearch = ({ currentPage, handleOnChange,  handleOnSubmit, isBreedVali
         hasMore
       />
 <div className= {classes.buttonContainer}>
-      {showPrev && <button onClick={handlePrev}>Previous</button>}
-      {showNext && <button onClick={handleNext}>Next</button>}
+     
       <form onSubmit={handleOnSubmit}>
       <button type="submit" className={classes.searchButton}>           <Search />
       </button>

@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 
 import { logout,setShowLogoutModal } from '../../store/auth';
 import Modal from "@mui/material/Modal";
+import classes from './MainNavigation.module.css';
 
 
 function MainNavigation() {
@@ -50,9 +51,7 @@ function MainNavigation() {
         <Button component={NavLink} to="/home" exact activeClassName="active" color="inherit">
           Home
         </Button>
-        <Button component={NavLink} to="/find-dog" activeClassName="active" color="inherit">
-          About
-        </Button>
+       
         <Button onClick={handleFavoritesClick} color="inherit">
           <Badge badgeContent={favoriteDogs.length} color="error">
             <FavoriteIcon />
@@ -64,7 +63,7 @@ function MainNavigation() {
           </Button>
         )}
         {isAuthenticated && (
-          <Button component="a" onClick={handleLogout} color="inherit">
+          <Button className={classes.logoutButton} component="a" onClick={handleLogout} color="inherit">
             Logout
           </Button>
         )}

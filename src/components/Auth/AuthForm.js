@@ -83,7 +83,7 @@ export default function Auth() {
           alt="Dog at the beach"
           style={{
             width: "100%",
-            height: "100vh",
+            height: "99vh",
             objectFit: "cover",
           }}
         />
@@ -100,15 +100,15 @@ export default function Auth() {
     <Typography
       variant="h2"
       component="h2"
-      sx={{ color: "white", fontWeight: "bold" }}
+      sx={{ color: "white", fontWeight: "bold" ,textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)'}}
     >
       Welcome!
     </Typography>
     <Typography
       variant="h5"
       component="h3"
-      sx={{ color: "white", marginTop: 2 }}
-    >
+      sx={{ color: "white", marginTop: 2 ,textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)'}}
+>
       Please sign in to continue.
     </Typography>
   </Box>
